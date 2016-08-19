@@ -25,7 +25,7 @@
 	<li><strong>clearcache</strong>: clear all gulp cache;</li>
 </ul>
 
-<h2>Rules for working with the starting template</h2>
+<h2>Rules for working with the starting HTML template</h2>
 
 <ol>
 	<li>All HTML files should have similar content to a file <strong>app/index.html</strong>;</li>
