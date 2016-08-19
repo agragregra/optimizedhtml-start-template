@@ -13,7 +13,7 @@
 <ol>
 	<li>Download <strong>optimizedhtml-start-template</strong> from GitHub;</li>
 	<li>Install Node Modules: <strong>npm i</strong>;</li>
-	<li>Run template: <strong>gulp</strong>.</li>
+	<li>Run the template: <strong>gulp</strong>.</li>
 </ol>
 
 <h2>Gulp tasks:</h2>
