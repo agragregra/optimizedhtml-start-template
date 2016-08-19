@@ -1,5 +1,7 @@
 <h1>OptimizedHTML - Start HTML Template</h1>
 
+<p>Author: <a href="http://webdesign-master.ru" target="_blank">WebDesign Master</a>.</p>
+
 <p>OptimizedHTML is all-inclusive, optimized for Google PageSpeed start HTML5 template with Bootstrap (grid only), Gulp, Sass, Browsersync, Autoprefixer, Clean-CSS, Uglify, Imagemin, Vinyl-FTP, Bower (libs path) and Bourbon support. The template contains a <strong>.htaccess</strong> file with caching rules for web server.</p>
 
 <p>OptimizedHTML Start Template uses the best practices of web development and optimized for Google PageSpeed.</p>
