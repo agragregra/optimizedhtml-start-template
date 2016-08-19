@@ -14,7 +14,7 @@ var gulp           = require('gulp'),
 		fileinclude    = require('gulp-file-include'),
 		gulpRemoveHtml = require('gulp-remove-html'),
 		bourbon        = require('node-bourbon'),
-		ftp            = require( 'vinyl-ftp' );
+		ftp            = require('vinyl-ftp');
 
 gulp.task('browser-sync', function() {
 	browserSync({
