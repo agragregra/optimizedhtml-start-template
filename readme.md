@@ -30,7 +30,7 @@
 <h2>Rules for working with the starting HTML template</h2>
 
 <ol>
-	<li>All HTML files should have similar content to a file <strong>app/index.html</strong>;</li>
+	<li>All HTML files should have similar initial content as in <strong>app/index.html</strong>;</li>
 	<li><strong>Template Basic Images Start</strong> comment in app/index.html - all your custom template basic images (og:image for social networking, favicons for a variety of devices);</li>
 	<li><strong>Load Fonts CSS Start</strong> comment in app/index.html: use <strong>loadCSS</strong> function, if the site is located in a subfolder. Use (uncomment) <strong>loadLocalStorageCSS</strong>, if the site is at the root. One of the lines should always be commented out. All fonts are connected in <strong>app/sass/fonts.sass</strong> with Bourbon;</li>
 	<li><strong>Custom Browsers Color Start</strong> comment in app/index.html: set the color of the browser head on a variety of devices;</li>
