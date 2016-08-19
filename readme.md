@@ -1,6 +1,6 @@
 <h1>OptimizedHTML - Start HTML Template</h1>
 
-<p>OptimizedHTML is all-inclusive Start HTML5 template with Bootstrap (grid only), Gulp, Sass, Browsersync, Autoprefixer, Clean-CSS, Uglify, Imagemin, Vinyl-FTP, Bower (libs path) and Bourbon support.</p>
+<p>OptimizedHTML is all-inclusive, optimized for Google PageSpeed Start HTML5 template with Bootstrap (grid only), Gulp, Sass, Browsersync, Autoprefixer, Clean-CSS, Uglify, Imagemin, Vinyl-FTP, Bower (libs path) and Bourbon support.</p>
 
 <p>OptimizedHTML Start Template uses the best practices of web development and optimized for Google PageSpeed.</p>
 
