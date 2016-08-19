@@ -1,5 +1,9 @@
 <h1>OptimizedHTML - Start HTML Template</h1>
 
+<p>
+	<img src="http://agragregra.github.io/github-images/optimized-html-github-poster.jpg" alt="Start HTML Template">
+</p>
+
 <p>Author: <a href="http://webdesign-master.ru" target="_blank">WebDesign Master</a>.</p>
 
 <p><a href="http://webdesign-master.ru/blog/tools/2016-08-19-optimizedhtml.html" target="_blank">Manual in Russian</a></p>
