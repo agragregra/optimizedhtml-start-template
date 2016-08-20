@@ -105,7 +105,7 @@ gulp.task('build', ['removedist', 'buildhtml', 'imagemin', 'sass', 'libs'], func
 
 });
 
-gulp.task('deploy', ['build'], function() {
+gulp.task('deploy', function() {
 
 	var conn = ftp.create({
 		host:      'hostname.com',
@@ -119,8 +119,8 @@ gulp.task('deploy', ['build'], function() {
 	'dist/**',
 	'dist/.htaccess',
 	];
-	return gulp.src( globs, { buffer: false } )
-	.pipe( conn.dest( '/path/to/folder/on/server' ) );
+	return gulp.src(globs, {buffer: false})
+	.pipe(conn.dest('/path/to/folder/on/server'));
 
 });
 
