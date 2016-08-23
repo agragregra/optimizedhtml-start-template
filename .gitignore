@@ -1,4 +1,4 @@
-node_modules/
+/node_modules/
 /dist/
-app/css/
-app/header.min.css
+/app/css/
+/app/header.min.css
