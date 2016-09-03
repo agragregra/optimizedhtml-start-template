@@ -1,112 +1,136 @@
-var gulp           = require('gulp'),
-		gutil          = require('gulp-util' ),
-		sass           = require('gulp-sass'),
-		browserSync    = require('browser-sync'),
-		concat         = require('gulp-concat'),
-		uglify         = require('gulp-uglify'),
-		cleanCSS       = require('gulp-clean-css'),
-		rename         = require('gulp-rename'),
-		del            = require('del'),
-		imagemin       = require('gulp-imagemin'),
-		pngquant       = require('imagemin-pngquant'),
-		cache          = require('gulp-cache'),
-		autoprefixer   = require('gulp-autoprefixer'),
-		fileinclude    = require('gulp-file-include'),
-		gulpRemoveHtml = require('gulp-remove-html'),
-		bourbon        = require('node-bourbon'),
-		ftp            = require('vinyl-ftp');
+'use strict';
+
+const gulp         = require('gulp'),
+	gutil          = require('gulp-util' ),
+	sass           = require('gulp-sass'),
+	browserSync    = require('browser-sync'),
+	concat         = require('gulp-concat'),
+	uglify         = require('gulp-uglify'),
+	cleanCSS       = require('gulp-clean-css'),
+	rename         = require('gulp-rename'),
+	del            = require('del'),
+	imagemin       = require('gulp-imagemin'),
+	pngquant       = require('imagemin-pngquant'),
+	cache          = require('gulp-cache'),
+	autoprefixer   = require('gulp-autoprefixer'),
+	fileinclude    = require('gulp-file-include'),
+	gulpRemoveHtml = require('gulp-remove-html'),
+	bourbon        = require('node-bourbon'),
+	ftp            = require('vinyl-ftp'),
+	errorNotifier  = require('gulp-error-notifier');
+
+/* Base settings */
+const basePath     = 'app';
+const sourcePath   = 'dist';
+const preprocessor = 'sass';
+/* End base settings */
 
 gulp.task('browser-sync', function() {
 	browserSync({
 		server: {
-			baseDir: 'app'
+			baseDir: basePath
 		},
 		notify: false
 	});
 });
 
-gulp.task('sass', ['headersass'], function() {
-	return gulp.src('app/sass/**/*.sass')
+gulp.task('sass', ['header'], function () {
+	return gulp.src(basePath + '/' + preprocessor + '/**/*.' + preprocessor)
+		.pipe(errorNotifier())
 		.pipe(sass({
 			includePaths: bourbon.includePaths
 		}).on('error', sass.logError))
-		.pipe(rename({suffix: '.min', prefix : ''}))
+		.pipe(rename({suffix: '.min', prefix: ''}))
 		.pipe(autoprefixer(['last 15 versions']))
 		.pipe(cleanCSS())
-		.pipe(gulp.dest('app/css'))
+		.pipe(gulp.dest(basePath + '/css'))
 		.pipe(browserSync.reload({stream: true}))
 });
 
-gulp.task('headersass', function() {
-	return gulp.src('app/header.sass')
+gulp.task('scss', ['header'], function () {
+	return gulp.src(basePath + '/' + preprocessor + '/**/*.' + preprocessor)
+		.pipe(errorNotifier())
 		.pipe(sass({
 			includePaths: bourbon.includePaths
 		}).on('error', sass.logError))
-		.pipe(rename({suffix: '.min', prefix : ''}))
+		.pipe(rename({suffix: '.min', prefix: ''}))
 		.pipe(autoprefixer(['last 15 versions']))
 		.pipe(cleanCSS())
-		.pipe(gulp.dest('app'))
+		.pipe(gulp.dest(basePath + '/css'))
 		.pipe(browserSync.reload({stream: true}))
 });
 
-gulp.task('libs', function() {
+gulp.task('header', function () {
+	return gulp.src(basePath + '/header.' + preprocessor)
+		.pipe(errorNotifier())
+		.pipe(sass({
+			includePaths: bourbon.includePaths
+		}).on('error', sass.logError))
+		.pipe(rename({suffix: '.min', prefix: ''}))
+		.pipe(autoprefixer(['last 15 versions']))
+		.pipe(cleanCSS())
+		.pipe(gulp.dest(basePath))
+		.pipe(browserSync.reload({stream: true}))
+});
+
+gulp.task('libs', function () {
 	return gulp.src([
-		'app/libs/jquery/dist/jquery.min.js',
-		// 'app/libs/magnific-popup/magnific-popup.min.js'
-		])
+		basePath + '/libs/jquery/dist/jquery.min.js',
+		// basePath + '/libs/magnific-popup/magnific-popup.min.js'
+	])
+		.pipe(errorNotifier())
 		.pipe(concat('libs.min.js'))
 		.pipe(uglify())
-		.pipe(gulp.dest('app/js'));
+		.pipe(gulp.dest(basePath + '/js'));
 });
 
-gulp.task('watch', ['sass', 'libs', 'browser-sync'], function() {
-	gulp.watch('app/header.sass', ['headersass']);
-	gulp.watch('app/sass/**/*.sass', ['sass']);
-	gulp.watch('app/*.html', browserSync.reload);
-	gulp.watch('app/js/**/*.js', browserSync.reload);
+gulp.task('watch', [preprocessor, 'libs', 'browser-sync'], function () {
+	gulp.watch(basePath + '/header.' + preprocessor, ['header']);
+	gulp.watch(basePath + '/' + preprocessor + '/**/*.' + preprocessor, [preprocessor]);
+	gulp.watch(basePath + '/*.html', browserSync.reload);
+	gulp.watch(basePath + '/js/**/*.js', browserSync.reload);
 });
 
 gulp.task('imagemin', function() {
 	return gulp.src('app/img/**/*')
+		.pipe(errorNotifier())
 		.pipe(cache(imagemin({
 			interlaced: true,
 			progressive: true,
 			svgoPlugins: [{removeViewBox: false}],
 			use: [pngquant()]
 		})))
-		.pipe(gulp.dest('dist/img')); 
+		.pipe(gulp.dest(sourcePath + '/img'));
 });
 
 gulp.task('buildhtml', function() {
   gulp.src(['app/*.html'])
-    .pipe(fileinclude({
-      prefix: '@@'
-    }))
-    .pipe(gulpRemoveHtml())
-    .pipe(gulp.dest('dist/'));
+  	.pipe(errorNotifier())
+	.pipe(fileinclude({
+	  prefix: '@@'
+	}))
+	.pipe(gulpRemoveHtml())
+	  .pipe(gulp.dest(sourcePath));
 });
 
-gulp.task('removedist', function() { return del.sync('dist'); });
+gulp.task('removedist', function() { return del.sync(sourcePath); });
 
-gulp.task('build', ['removedist', 'buildhtml', 'imagemin', 'sass', 'libs'], function() {
-
+gulp.task('build', ['removedist', 'buildhtml', 'imagemin', preprocessor, 'libs'], function() {
 	var buildCss = gulp.src([
 		'app/css/fonts.min.css',
 		'app/css/main.min.css'
-		]).pipe(gulp.dest('dist/css'));
+		]).pipe(gulp.dest(sourcePath + '/css'));
 
 	var buildFiles = gulp.src([
 		'app/.htaccess'
-	]).pipe(gulp.dest('dist'));
+	]).pipe(gulp.dest(sourcePath));
 
-	var buildFonts = gulp.src('app/fonts/**/*').pipe(gulp.dest('dist/fonts'));
+	var buildFonts = gulp.src(basePath + '/fonts/**/*').pipe(gulp.dest(sourcePath + '/fonts'));
 
-	var buildJs = gulp.src('app/js/**/*').pipe(gulp.dest('dist/js'));
-
+	var buildJs = gulp.src(basePath + '/js/**/*').pipe(gulp.dest(sourcePath + '/js'));
 });
 
 gulp.task('deploy', function() {
-
 	var conn = ftp.create({
 		host:      'hostname.com',
 		user:      'username',
@@ -121,7 +145,6 @@ gulp.task('deploy', function() {
 	];
 	return gulp.src(globs, {buffer: false})
 	.pipe(conn.dest('/path/to/folder/on/server'));
-
 });
 
 gulp.task('clearcache', function () { return cache.clearAll(); });
