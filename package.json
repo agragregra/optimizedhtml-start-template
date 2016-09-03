@@ -1,6 +1,6 @@
 {
   "name": "optimizedhtml",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "OptimizedHTML - Start HTML Template",
   "main": "index.js",
   "scripts": {
@@ -25,6 +25,7 @@
     "gulp-util": "^3.0.7",
     "imagemin-pngquant": "^5.0.0",
     "node-bourbon": "^4.2.8",
-    "vinyl-ftp": "^0.5.0"
+    "vinyl-ftp": "^0.5.0",
+    "gulp-error-notifier": "^1.1.0"
   }
 }
