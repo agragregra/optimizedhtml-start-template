@@ -61,7 +61,7 @@ gulp.task('scss', ['header'], function () {
 });
 
 gulp.task('header', function () {
-	return gulp.src(basePath + '/header.' + preprocessor)
+	return gulp.src(basePath + '/header/header.' + preprocessor)
 		.pipe(errorNotifier())
 		.pipe(sass({
 			includePaths: bourbon.includePaths
@@ -69,7 +69,7 @@ gulp.task('header', function () {
 		.pipe(rename({suffix: '.min', prefix: ''}))
 		.pipe(autoprefixer(['last 15 versions']))
 		.pipe(cleanCSS())
-		.pipe(gulp.dest(basePath))
+		.pipe(gulp.dest(basePath + '/header'))
 		.pipe(browserSync.reload({stream: true}))
 });
 
@@ -85,7 +85,7 @@ gulp.task('libs', function () {
 });
 
 gulp.task('watch', [preprocessor, 'libs', 'browser-sync'], function () {
-	gulp.watch(basePath + '/header.' + preprocessor, ['header']);
+	gulp.watch(basePath + '/header/header.' + preprocessor, ['header']);
 	gulp.watch(basePath + '/' + preprocessor + '/**/*.' + preprocessor, [preprocessor]);
 	gulp.watch(basePath + '/*.html', browserSync.reload);
 	gulp.watch(basePath + '/js/**/*.js', browserSync.reload);
