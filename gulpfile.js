@@ -17,25 +17,31 @@ const gulp         = require('gulp'),
 	gulpRemoveHtml = require('gulp-remove-html'),
 	bourbon        = require('node-bourbon'),
 	ftp            = require('vinyl-ftp'),
+	notify		   = require('gulp-notify'),
 	errorNotifier  = require('gulp-error-notifier');
 
 /* Base settings */
-const basePath     = 'app';
-const sourcePath   = 'dist';
-const preprocessor = 'sass';
+var config = {
+	preprocessor: 'scss',
+	basePath: 'app',
+	sourcePath: 'dist',
+	bowerPath: this.basePath + '/libs',
+	npmPath: 'node_modules'
+};
 /* End base settings */
+
 
 gulp.task('browser-sync', function() {
 	browserSync({
 		server: {
-			baseDir: basePath
+			baseDir: config.basePath
 		},
 		notify: false
 	});
 });
 
 gulp.task('sass', ['header'], function () {
-	return gulp.src(basePath + '/' + preprocessor + '/**/*.' + preprocessor)
+	return gulp.src(config.basePath + '/' + config.preprocessor + '/**/*.' + config.preprocessor)
 		.pipe(errorNotifier())
 		.pipe(sass({
 			includePaths: bourbon.includePaths
@@ -43,12 +49,12 @@ gulp.task('sass', ['header'], function () {
 		.pipe(rename({suffix: '.min', prefix: ''}))
 		.pipe(autoprefixer(['last 15 versions']))
 		.pipe(cleanCSS())
-		.pipe(gulp.dest(basePath + '/css'))
+		.pipe(gulp.dest(config.basePath + '/css'))
 		.pipe(browserSync.reload({stream: true}))
 });
 
 gulp.task('scss', ['header'], function () {
-	return gulp.src(basePath + '/' + preprocessor + '/**/*.' + preprocessor)
+	return gulp.src(config.basePath + '/' + config.preprocessor + '/**/*.' + config.preprocessor)
 		.pipe(errorNotifier())
 		.pipe(sass({
 			includePaths: bourbon.includePaths
@@ -56,12 +62,12 @@ gulp.task('scss', ['header'], function () {
 		.pipe(rename({suffix: '.min', prefix: ''}))
 		.pipe(autoprefixer(['last 15 versions']))
 		.pipe(cleanCSS())
-		.pipe(gulp.dest(basePath + '/css'))
+		.pipe(gulp.dest(config.basePath + '/css'))
 		.pipe(browserSync.reload({stream: true}))
 });
 
 gulp.task('header', function () {
-	return gulp.src(basePath + '/header/header.' + preprocessor)
+	return gulp.src(config.basePath + '/header/header.' + config.preprocessor)
 		.pipe(errorNotifier())
 		.pipe(sass({
 			includePaths: bourbon.includePaths
@@ -69,26 +75,26 @@ gulp.task('header', function () {
 		.pipe(rename({suffix: '.min', prefix: ''}))
 		.pipe(autoprefixer(['last 15 versions']))
 		.pipe(cleanCSS())
-		.pipe(gulp.dest(basePath + '/header'))
+		.pipe(gulp.dest(config.basePath + '/header'))
 		.pipe(browserSync.reload({stream: true}))
 });
 
 gulp.task('libs', function () {
 	return gulp.src([
-		basePath + '/libs/jquery/dist/jquery.min.js',
-		// basePath + '/libs/magnific-popup/magnific-popup.min.js'
+		config.npmPath + '/jquery/dist/jquery.min.js',
+		config.npmPath + '/bootstrap-sass/assets/javascripts/bootstrap.min.js',
 	])
 		.pipe(errorNotifier())
 		.pipe(concat('libs.min.js'))
 		.pipe(uglify())
-		.pipe(gulp.dest(basePath + '/js'));
+		.pipe(gulp.dest(config.basePath + '/js'));
 });
 
-gulp.task('watch', [preprocessor, 'libs', 'browser-sync'], function () {
-	gulp.watch(basePath + '/header/header.' + preprocessor, ['header']);
-	gulp.watch(basePath + '/' + preprocessor + '/**/*.' + preprocessor, [preprocessor]);
-	gulp.watch(basePath + '/*.html', browserSync.reload);
-	gulp.watch(basePath + '/js/**/*.js', browserSync.reload);
+gulp.task('watch', [config.preprocessor, 'libs', 'browser-sync'], function () {
+	gulp.watch(config.basePath + '/header/header.' + config.preprocessor, ['header']);
+	gulp.watch(config.basePath + '/' + config.preprocessor + '/**/*.' + config.preprocessor, [config.preprocessor]);
+	gulp.watch(config.basePath + '/*.html', browserSync.reload);
+	gulp.watch(config.basePath + '/js/**/*.js', browserSync.reload);
 });
 
 gulp.task('imagemin', function() {
@@ -100,51 +106,34 @@ gulp.task('imagemin', function() {
 			svgoPlugins: [{removeViewBox: false}],
 			use: [pngquant()]
 		})))
-		.pipe(gulp.dest(sourcePath + '/img'));
+		.pipe(gulp.dest(config.sourcePath + '/img'));
 });
 
 gulp.task('buildhtml', function() {
-  gulp.src(['app/*.html'])
-  	.pipe(errorNotifier())
-	.pipe(fileinclude({
-	  prefix: '@@'
-	}))
-	.pipe(gulpRemoveHtml())
-	  .pipe(gulp.dest(sourcePath));
+	gulp.src(['app/*.html'])
+		.pipe(errorNotifier())
+		.pipe(fileinclude({
+			prefix: '@@'
+		}))
+		.pipe(gulpRemoveHtml())
+		.pipe(gulp.dest(config.sourcePath));
 });
 
-gulp.task('removedist', function() { return del.sync(sourcePath); });
+gulp.task('removedist', function() { return del.sync(config.sourcePath); });
 
-gulp.task('build', ['removedist', 'buildhtml', 'imagemin', preprocessor, 'libs'], function() {
+gulp.task('build', ['removedist', 'buildhtml', 'imagemin', config.preprocessor, 'libs'], function() {
 	var buildCss = gulp.src([
 		'app/css/fonts.min.css',
 		'app/css/main.min.css'
-		]).pipe(gulp.dest(sourcePath + '/css'));
+	]).pipe(gulp.dest(config.sourcePath + '/css'));
 
 	var buildFiles = gulp.src([
 		'app/.htaccess'
-	]).pipe(gulp.dest(sourcePath));
+	]).pipe(gulp.dest(config.sourcePath));
 
-	var buildFonts = gulp.src(basePath + '/fonts/**/*').pipe(gulp.dest(sourcePath + '/fonts'));
+	var buildFonts = gulp.src(config.basePath + '/fonts/**/*').pipe(gulp.dest(config.sourcePath + '/fonts'));
 
-	var buildJs = gulp.src(basePath + '/js/**/*').pipe(gulp.dest(sourcePath + '/js'));
-});
-
-gulp.task('deploy', function() {
-	var conn = ftp.create({
-		host:      'hostname.com',
-		user:      'username',
-		password:  'userpassword',
-		parallel:  10,
-		log: gutil.log
-	});
-
-	var globs = [
-	'dist/**',
-	'dist/.htaccess',
-	];
-	return gulp.src(globs, {buffer: false})
-	.pipe(conn.dest('/path/to/folder/on/server'));
+	var buildJs = gulp.src(config.basePath + '/js/**/*').pipe(gulp.dest(config.sourcePath + '/js'));
 });
 
 gulp.task('clearcache', function () { return cache.clearAll(); });
