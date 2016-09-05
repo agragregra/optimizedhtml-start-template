@@ -25,7 +25,7 @@ gulp.task('browser-sync', function() {
 	});
 });
 
-gulp.task('sass', ['headersass'], function() {
+gulp.task('sass', ['headersass', 'gridsass'], function() {
 	return gulp.src('app/sass/**/*.sass')
 		.pipe(sass({
 			includePaths: bourbon.includePaths
@@ -49,6 +49,16 @@ gulp.task('headersass', function() {
 		.pipe(browserSync.reload({stream: true}))
 });
 
+gulp.task('gridsass', function() {
+	return gulp.src('app/grid.sass')
+	.pipe(sass().on('error', sass.logError))
+	.pipe(rename({suffix: '.min', prefix: ''}))
+	.pipe(autoprefixer(['last 15 versions']))
+	.pipe(cleanCSS())
+	.pipe(gulp.dest('app'))
+	.pipe(browserSync.reload({stream: true}))
+});
+
 gulp.task('libs', function() {
 	return gulp.src([
 		'app/libs/jquery/dist/jquery.min.js',
@@ -61,6 +71,7 @@ gulp.task('libs', function() {
 
 gulp.task('watch', ['sass', 'libs', 'browser-sync'], function() {
 	gulp.watch('app/header.sass', ['headersass']);
+	gulp.watch('app/grid.sass', ['gridsass'])
 	gulp.watch('app/sass/**/*.sass', ['sass']);
 	gulp.watch('app/*.html', browserSync.reload);
 	gulp.watch('app/js/**/*.js', browserSync.reload);
