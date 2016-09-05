@@ -2,3 +2,41 @@
 @import "sass/bootstrap_grid/bootstrap"
 
 //grid layout, use sass mixins from bootstrap grid system
+* 
+  box-sizing: border-box
+
+
+.container
+  +container-fixed()
+
+header
+  +make-row()
+
+.logo
+  +make-md-column(2)
+
+.menu
+  +make-md-column(10)
+
+.content
+  +make-row()
+
+  &__features
+    +make-md-column(12)
+    padding: 0
+
+    &-item
+      +make-md-column(4)
+
+  &__main
+    +make-md-column(12)
+
+
+.footer
+  +make-row()
+
+  &__item
+    +make-md-column(4)
+
+
+
