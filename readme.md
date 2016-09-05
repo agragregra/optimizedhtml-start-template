@@ -49,3 +49,8 @@
 	<li>In the file <strong>app/header.sass</strong> should be placed all styless, responsible for displaying the first screen (on the biggest screens) on all pages;</li>
 	<li>Rename <strong>ht.access</strong> to <strong>.htaccess</strong> before place it in your web server. This file contain rules for files caching on web server.</li>
 </ol>
+
+<h2>Test section</h2>
+<p>
+	Add sass grid functional. <a href="https://github.com/twbs/bootstrap-sass/blob/master/assets/stylesheets/bootstrap/mixins/_grid.scss">Here</a> Sass mixins for use. And <a href="http://v4-alpha.getbootstrap.com/layout/grid/#sass-mixins">oficial documentation</a> with examples.
+</p>
