@@ -54,3 +54,12 @@
 <p>
 	Add sass grid functional. <a href="https://github.com/twbs/bootstrap-sass/blob/master/assets/stylesheets/bootstrap/mixins/_grid.scss">Here</a> Sass mixins for use. And <a href="http://v4-alpha.getbootstrap.com/layout/grid/#sass-mixins">oficial documentation</a> with examples.
 </p>
+
+<h2>TODO</h2>
+<p>
+<ol>
+<li>Добавить файл миксинов</li>
+<li>Добавить дефолтные миксины для шрифта</li>
+<li>Прописать @@include для grid.min.css</li>
+</ol>
+</p>
