@@ -14,7 +14,8 @@ var gulp           = require('gulp'),
 		fileinclude    = require('gulp-file-include'),
 		gulpRemoveHtml = require('gulp-remove-html'),
 		bourbon        = require('node-bourbon'),
-		ftp            = require('vinyl-ftp');
+		ftp            = require('vinyl-ftp'),
+		notify         = require("gulp-notify");
 
 gulp.task('browser-sync', function() {
 	browserSync({
@@ -29,7 +30,7 @@ gulp.task('sass', ['headersass'], function() {
 	return gulp.src('app/sass/**/*.sass')
 		.pipe(sass({
 			includePaths: bourbon.includePaths
-		}).on('error', sass.logError))
+		}).on("error", notify.onError()))
 		.pipe(rename({suffix: '.min', prefix : ''}))
 		.pipe(autoprefixer(['last 15 versions']))
 		.pipe(cleanCSS())
@@ -41,7 +42,7 @@ gulp.task('headersass', function() {
 	return gulp.src('app/header.sass')
 		.pipe(sass({
 			includePaths: bourbon.includePaths
-		}).on('error', sass.logError))
+		}).on("error", notify.onError()))
 		.pipe(rename({suffix: '.min', prefix : ''}))
 		.pipe(autoprefixer(['last 15 versions']))
 		.pipe(cleanCSS())
