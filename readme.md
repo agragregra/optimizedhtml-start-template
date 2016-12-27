@@ -18,7 +18,7 @@
 
 <ol>
 	<li><a href="https://github.com/agragregra/optimizedhtml-start-template/archive/master.zip">Download</a> <strong>optimizedhtml-start-template</strong> from GitHub;</li>
-	<li>Install Node Modules: <strong>npm i</strong>;</li>
+	<li>Install Node Modules: <strong>npm i</strong> or <strong>yarn install</strong>;</li>
 	<li>Run the template: <strong>gulp</strong>.</li>
 </ol>
 
