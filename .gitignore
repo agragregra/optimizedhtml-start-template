@@ -3,3 +3,5 @@
 /app/css/
 /**/*.psd
 /**/Thumbs.db
+.idea
+yarn.lock
