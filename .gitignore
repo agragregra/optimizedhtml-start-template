@@ -4,4 +4,4 @@
 /app/css/
 /**/*.psd
 /**/Thumbs.db
-.gitignore
+/.gitignore
