@@ -15,7 +15,7 @@ var gulp           = require('gulp'),
 		notify         = require("gulp-notify");
 
 // Скрипты проекта
-gulp.task('scripts', function() {
+gulp.task('js', function() {
 	return gulp.src([
 		'app/libs/jquery/dist/jquery.min.js',
 		'app/js/common.js', // Всегда в конце
@@ -49,9 +49,9 @@ gulp.task('sass', function() {
 	.pipe(browserSync.reload({stream: true}));
 });
 
-gulp.task('watch', ['sass', 'scripts', 'browser-sync'], function() {
+gulp.task('watch', ['sass', 'js', 'browser-sync'], function() {
 	gulp.watch('app/sass/**/*.sass', ['sass']);
-	gulp.watch(['libs/**/*.js', 'app/js/common.js'], ['scripts']);
+	gulp.watch(['libs/**/*.js', 'app/js/common.js'], ['js']);
 	gulp.watch('app/*.html', browserSync.reload);
 });
 
@@ -61,7 +61,7 @@ gulp.task('imagemin', function() {
 	.pipe(gulp.dest('dist/img')); 
 });
 
-gulp.task('build', ['removedist', 'imagemin', 'sass', 'scripts'], function() {
+gulp.task('build', ['removedist', 'imagemin', 'sass', 'js'], function() {
 
 	var buildFiles = gulp.src([
 		'app/*.html',
