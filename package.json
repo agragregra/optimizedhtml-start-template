@@ -1,6 +1,6 @@
 {
   "name": "optimizedhtml",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "OptimizedHTML - Start HTML Template",
   "main": "index.js",
   "scripts": {
