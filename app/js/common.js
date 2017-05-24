@@ -1,5 +1,13 @@
-$(function() {
+/* For preloader */
+$(window).on('load', function(){
 
-	// Custom JS
+	console.log('load');
 
+});
+
+/* scripts ready */
+$(document).ready(function(){
+
+	console.log('ready');
+	
 });
