@@ -108,6 +108,18 @@ gulp.task('deploy', function() {
 
 });
 
+gulp.task('rsync', function() {
+	return gulp.src('dist/**')
+	.pipe(rsync({
+		root: 'dist/',
+		hostname: 'username@yousite.com',
+		destination: 'yousite/public_html/',
+		archive: true,
+		silent: false,
+		compress: true
+	}));
+});
+
 gulp.task('removedist', function() { return del.sync('dist'); });
 gulp.task('clearcache', function () { return cache.clearAll(); });
 
