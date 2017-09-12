@@ -14,7 +14,7 @@ var gulp           = require('gulp'),
 		notify         = require("gulp-notify"),
 		rsync          = require('gulp-rsync');
 
-// Скрипты проекта
+// Пользовательские скрипты проекта
 
 gulp.task('common-js', function() {
 	return gulp.src([
