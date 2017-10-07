@@ -115,6 +115,8 @@ gulp.task('rsync', function() {
 		root: 'dist/',
 		hostname: 'username@yousite.com',
 		destination: 'yousite/public_html/',
+		// include: ['*.htaccess'], // Скрытые файлы, которые необходимо включить в деплой
+		recursive: true,
 		archive: true,
 		silent: false,
 		compress: true
