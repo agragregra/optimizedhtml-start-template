@@ -44,7 +44,6 @@ body
 	line-height: 1.65
 	font-family: $default-font
 	overflow-x: hidden
-	opacity: 1
 
 .img-responsive
 	display: block
@@ -53,5 +52,9 @@ body
 
 .text-center
 	text-align: center
+
+::selection
+	background-color: $accent
+	color: #fff
 
 @import "media" // Всегда в конце
