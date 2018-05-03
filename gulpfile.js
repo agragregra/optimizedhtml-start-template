@@ -14,6 +14,17 @@ var gulp           = require('gulp'),
 		notify         = require("gulp-notify"),
 		rsync          = require('gulp-rsync');
 
+	gulp.task('browser-sync', function() {
+		browserSync({
+			server: {
+				baseDir: 'app'
+			},
+			notify: false,
+			// tunnel: true,
+			// tunnel: "projectmane", //Demonstration page: http://projectmane.localtunnel.me
+		});
+	});
+
 // Пользовательские скрипты проекта
 
 gulp.task('common-js', function() {
@@ -33,18 +44,7 @@ gulp.task('js', ['common-js'], function() {
 	.pipe(concat('scripts.min.js'))
 	// .pipe(uglify()) // Минимизировать весь js (на выбор)
 	.pipe(gulp.dest('app/js'))
-	.pipe(browserSync.reload({stream: true}));
-});
-
-gulp.task('browser-sync', function() {
-	browserSync({
-		server: {
-			baseDir: 'app'
-		},
-		notify: false,
-		// tunnel: true,
-		// tunnel: "projectmane", //Demonstration page: http://projectmane.localtunnel.me
-	});
+	.pipe(browserSync.reload({ stream: true }));
 });
 
 gulp.task('sass', function() {
@@ -54,7 +54,7 @@ gulp.task('sass', function() {
 	.pipe(autoprefixer(['last 15 versions']))
 	.pipe(cleanCSS()) // Опционально, закомментировать при отладке
 	.pipe(gulp.dest('app/css'))
-	.pipe(browserSync.reload({stream: true}));
+	.pipe(browserSync.stream())
 });
 
 gulp.task('watch', ['sass', 'js', 'browser-sync'], function() {
