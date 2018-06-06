@@ -49,7 +49,7 @@ gulp.task('js', ['common-js'], function() {
 
 gulp.task('sass', function() {
 	return gulp.src('app/sass/**/*.sass')
-	.pipe(sass({outputStyle: 'expand'}).on("error", notify.onError()))
+	.pipe(sass({outputStyle: 'expanded'}).on("error", notify.onError()))
 	.pipe(rename({suffix: '.min', prefix : ''}))
 	.pipe(autoprefixer(['last 15 versions']))
 	.pipe(cleanCSS()) // Опционально, закомментировать при отладке
