@@ -1,5 +1,4 @@
 var gulp           = require('gulp'),
-		gutil          = require('gulp-util' ),
 		sass           = require('gulp-sass'),
 		browserSync    = require('browser-sync').create(),
 		concat         = require('gulp-concat'),
@@ -74,8 +73,7 @@ gulp.task('deploy', function() {
 		host:      'hostname.com',
 		user:      'username',
 		password:  'userpassword',
-		parallel:  10,
-		log: gutil.log
+		parallel:  10
 	});
 
 	var globs = [

@@ -20,7 +20,7 @@
     "gulp-notify": "^3.2.0",
     "gulp-rename": "^2.0.0",
     "gulp-rsync": "0.0.8",
-    "gulp-sass": "^4.0.2",
+    "gulp-sass": "^4.1.0",
     "gulp-uglify": "^3.0.2",
     "gulp-uglify-es": "^2.0.0",
     "vinyl-ftp": "^0.6.1"
