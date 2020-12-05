@@ -6,3 +6,4 @@
 /**/package-lock.json
 /**/Thumbs.db
 /**/*.DS_Store
+/**/debug.log
