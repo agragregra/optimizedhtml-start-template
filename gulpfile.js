@@ -1,17 +1,17 @@
-var gulp           = require('gulp'),
-		sass           = require('gulp-sass')(require('sass')),
-		browserSync    = require('browser-sync').create(),
-		concat         = require('gulp-concat'),
-		uglify         = require('gulp-uglify-es').default,
-		cleanCSS       = require('gulp-clean-css'),
-		rename         = require('gulp-rename'),
-		del            = require('del'),
-		imagemin       = require('gulp-imagemin'),
-		cache          = require('gulp-cache'),
-		autoprefixer   = require('gulp-autoprefixer'),
-		ftp            = require('vinyl-ftp'),
-		notify         = require("gulp-notify"),
-		rsync          = require('gulp-rsync');
+var gulp         = require('gulp'),
+		sass         = require('gulp-sass')(require('sass')),
+		browserSync  = require('browser-sync').create(),
+		concat       = require('gulp-concat'),
+		uglify       = require('gulp-uglify-es').default,
+		cleanCSS     = require('gulp-clean-css'),
+		rename       = require('gulp-rename'),
+		del          = require('del'),
+		imagecomp    = require("compress-images"),
+		cache        = require('gulp-cache'),
+		autoprefixer = require('gulp-autoprefixer'),
+		ftp          = require('vinyl-ftp'),
+		notify       = require("gulp-notify"),
+		rsync        = require('gulp-rsync');
 
 gulp.task('browser-sync', function() {
 	browserSync.init({
@@ -51,10 +51,21 @@ gulp.task('js', function() {
 	.pipe(browserSync.reload({ stream: true }));
 });
 
-gulp.task('imagemin', function() {
-	return gulp.src('app/img/**/*')
-	.pipe(cache(imagemin())) // Cache Images
-	.pipe(gulp.dest('dist/img')); 
+gulp.task('imagemin', async function() {
+	imagecomp(
+		"app/img/**/*",
+		"dist/img/",
+		{ compress_force: false, statistic: true, autoupdate: true }, false,
+		{ jpg: { engine: "mozjpeg", command: ["-quality", "75"] } },
+		{ png: { engine: "pngquant", command: ["--quality=75", "-o"] } },
+		{ svg: { engine: "svgo", command: "--multipass" } },
+		{ gif: { engine: "gifsicle", command: ["--colors", "64", "--use-col=web"] } },
+		function (err, completed) {
+			if (completed === true) {
+				// browserSync.reload()
+			}
+		}
+	)
 });
 
 gulp.task('removedist', function() { return del(['dist'], { force: true }) });
