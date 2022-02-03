@@ -110,7 +110,7 @@ function startwatch() {
 	watch(['app/*.html'], { usePolling: true }).on('change', browserSync.reload)
 }
 
-export { js, sass, imagemin, deploy, clearcache }
+export { js, sass, imagemin, deploy, rsync, clearcache }
 export let build = series(removedist, imagemin, js, sass, buildcopy)
 
 export default series(js, sass, parallel(browsersync, startwatch))
