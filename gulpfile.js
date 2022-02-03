@@ -1,125 +1,117 @@
-var gulp         = require('gulp'),
-		sass         = require('gulp-sass')(require('sass')),
-		browserSync  = require('browser-sync').create(),
-		concat       = require('gulp-concat'),
-		uglify       = require('gulp-uglify-es').default,
-		cleanCSS     = require('gulp-clean-css'),
-		rename       = require('gulp-rename'),
-		del          = require('del'),
-		imagecomp    = require("compress-images"),
-		cache        = require('gulp-cache'),
-		autoprefixer = require('gulp-autoprefixer'),
-		ftp          = require('vinyl-ftp'),
-		notify       = require("gulp-notify"),
-		rsync        = require('gulp-rsync');
+import pkg from 'gulp'
+const { gulp, src, dest, parallel, series, watch } = pkg
 
-gulp.task('browser-sync', function() {
+import browserSync   from 'browser-sync'
+import gulpSass      from 'gulp-sass'
+import dartSass      from 'sass'
+import postCss       from 'gulp-postcss'
+import cssnano       from 'cssnano'
+const  sassfn        = gulpSass(dartSass)
+import concat        from 'gulp-concat'
+import uglifyim      from 'gulp-uglify-es'
+const  uglify        = uglifyim.default
+import rename        from 'gulp-rename'
+import del           from 'del'
+import imageminfn    from 'gulp-imagemin'
+import changed       from 'gulp-changed'
+import cache         from 'gulp-cache'
+import autoprefixer  from 'autoprefixer'
+import ftp           from 'vinyl-ftp'
+import rsyncfn       from 'gulp-rsync'
+
+function browsersync() {
 	browserSync.init({
 		server: {
-			baseDir: 'app'
+			baseDir: 'app/',
 		},
+		ghostMode: { clicks: false },
 		notify: false,
-		// online: false, // Work offline without internet connection
-		// tunnel: true, tunnel: 'projectname', // Demonstration page: http://projectname.localtunnel.me
+		online: true,
+		// tunnel: 'yousutename', // Attempt to use the URL https://yousutename.loca.lt
 	})
-});
-function bsReload(done) { browserSync.reload(); done() };
+}
 
-gulp.task('sass', function() {
-	return gulp.src('app/sass/**/*.sass')
-	.pipe(sass({outputStyle: 'expanded'}).on("error", notify.onError()))
-	.pipe(rename({suffix: '.min', prefix : ''}))
-	.pipe(autoprefixer({
-		// grid: true, // Optional. Enable CSS Grid
-		overrideBrowserslist: ['last 10 versions']
-	}))
-	.pipe(cleanCSS()) // Опционально, закомментировать при отладке
-	.pipe(gulp.dest('app/css'))
-	.pipe(browserSync.stream())
-});
-
-// Пользовательские скрипты проекта
-
-gulp.task('js', function() {
-	return gulp.src([
+function js() {
+	return src([
 		'app/libs/jquery/dist/jquery.min.js',
 		'app/js/common.js', // Всегда в конце
 		])
 	.pipe(concat('scripts.min.js'))
 	.pipe(uglify()) // Минимизировать весь js (на выбор)
-	.pipe(gulp.dest('app/js'))
-	.pipe(browserSync.reload({ stream: true }));
-});
+	.pipe(dest('app/js'))
+	.pipe(browserSync.stream())
+}
 
-gulp.task('imagemin', async function() {
-	imagecomp(
-		"app/img/**/*",
-		"dist/img/",
-		{ compress_force: false, statistic: true, autoupdate: true }, false,
-		{ jpg: { engine: "mozjpeg", command: ["-quality", "75"] } },
-		{ png: { engine: "pngquant", command: ["--quality=75-100", "-o"] } },
-		{ svg: { engine: "svgo", command: "--multipass" } },
-		{ gif: { engine: "gifsicle", command: ["--colors", "64", "--use-col=web"] } },
-		function (err, completed) {
-			if (completed === true) {
-				// browserSync.reload()
-			}
-		}
-	)
-});
+function sass() {
+	return src('app/sass/**/*.sass')
+	.pipe(sassfn())
+	.pipe(postCss([
+		autoprefixer({ grid: 'autoplace' }),
+		cssnano({ preset: ['default', { discardComments: { removeAll: true } }] })
+	]))
+	.pipe(rename({suffix: '.min', prefix : ''}))
+	.pipe(dest('app/css'))
+	.pipe(browserSync.stream())
+}
 
-gulp.task('removedist', function() { return del(['dist'], { force: true }) });
-gulp.task('clearcache', function () { return cache.clearAll(); });
+function imagemin() {
+	return src(['app/img/**/*'])
+		.pipe(changed('dist/img/'))
+		.pipe(imageminfn())
+		.pipe(dest('dist/img/'))
+		.pipe(browserSync.stream())
+}
 
-gulp.task('buildFiles', function() { return gulp.src(['app/*.html', 'app/.htaccess']).pipe(gulp.dest('dist')) });
-gulp.task('buildCss', function() { return gulp.src(['app/css/main.min.css']).pipe(gulp.dest('dist/css')) });
-gulp.task('buildJs', function() { return gulp.src(['app/js/scripts.min.js']).pipe(gulp.dest('dist/js')) });
-gulp.task('buildFonts', function() { return gulp.src(['app/fonts/**/*']).pipe(gulp.dest('dist/fonts')) });
+async function removedist() { del('dist/**/*', { force: true }) }
+async function clearcache() { cache.clearAll() }
 
-gulp.task('build', gulp.series('removedist', 'imagemin', 'sass', 'js', 'buildFiles', 'buildCss', 'buildJs', 'buildFonts'));
+function buildcopy() {
+	return src([
+		'app/*.html',
+		'{app/js,app/css}/*.min.*',
+		'app/fonts/**/*'
+	], { base: 'app/' })
+	.pipe(dest('dist'))
+}
 
-gulp.task('deploy', function() {
-
-	var conn = ftp.create({
-		host:      'hostname.com',
-		user:      'username',
-		password:  'userpassword',
-		parallel:  10
+function deploy() {
+	let conn = ftp.create({
+		host:     'hostname.com',
+		user:     'username',
+		password: 'userpassword',
+		parallel: 10
 	});
+	let globs = [
+		'dist/**',
+		'dist/.htaccess',
+	]
+	return src(globs, {buffer: false})
+	.pipe(conn.dest('/path/to/folder/on/server'))
+}
 
-	var globs = [
-	'dist/**',
-	'dist/.htaccess',
-	];
-	return gulp.src(globs, {buffer: false})
-	.pipe(conn.dest('/path/to/folder/on/server'));
+function rsync() {
+	return src('dist/')
+		.pipe(rsyncfn({
+			root: 'dist/',
+			hostname: 'username@yousite.com',
+			destination: 'yousite/public_html/',
+			// clean: true, // Mirror copy with file deletion
+			include: [/* '*.htaccess' */], // Included files to deploy,
+			exclude: [ '**/Thumbs.db', '**/*.DS_Store' ],
+			recursive: true,
+			archive: true,
+			silent: false,
+			compress: true
+		}))
+}
 
-});
+function startwatch() {
+	watch('app/sass/**/*.sass', { usePolling: true }, sass)
+	watch(['libs/**/*.js', 'app/js/common.js'], { usePolling: true }, js)
+	watch('app/*.html', { usePolling: true }).on('change', browserSync.reload)
+}
 
-gulp.task('rsync', function() {
-	return gulp.src('app/')
-	.pipe(rsync({
-		root: 'dist/',
-		hostname: 'username@yousite.com',
-		destination: 'yousite/public_html/',
-		// include: ['*.htaccess'], // Included files
-		exclude: ['**/Thumbs.db', '**/*.DS_Store'], // Excluded files
-		recursive: true,
-		archive: true,
-		silent: false,
-		compress: true
-	}))
-});
+export { js, sass, imagemin, deploy }
+export let build = series(removedist, imagemin, js, sass, buildcopy)
 
-gulp.task('code', function() {
-	return gulp.src('app/**/*.html')
-	.pipe(browserSync.reload({ stream: true }))
-});
-
-gulp.task('watch', function() {
-	gulp.watch('app/sass/**/*.sass', gulp.parallel('sass'));
-	gulp.watch(['libs/**/*.js', 'app/js/common.js'], gulp.parallel('js'));
-	gulp.watch('app/*.html', gulp.parallel('code'));
-});
-
-gulp.task('default', gulp.parallel('sass', 'js', 'browser-sync', 'watch'));
+export default series(js, sass, parallel(browsersync, startwatch))
