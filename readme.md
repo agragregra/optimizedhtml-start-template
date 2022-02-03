@@ -16,7 +16,7 @@
 
 <ol>
 	<li><a href="https://github.com/agragregra/optimizedhtml-start-template/archive/master.zip">Download</a> <strong>optimizedhtml-start-template</strong> from GitHub;</li>
-	<li>Install WLS (for Windows): <a href="https://webdesign-master.ru/blog/tools/wsl-nodejs-new.html" target="_blank">https://webdesign-master.ru/blog/tools/wsl-nodejs-new.html</a></li>
+	<li>Install WSL (for Windows): <a href="https://webdesign-master.ru/blog/tools/wsl-nodejs-new.html" target="_blank">https://webdesign-master.ru/blog/tools/wsl-nodejs-new.html</a></li>
 	<li>Install Node Modules: <strong>npm i</strong>;</li>
 	<li>Run the template: <strong>gulp</strong>.</li>
 </ol>
