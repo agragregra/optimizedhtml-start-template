@@ -48,7 +48,7 @@ function sass() {
 		autoprefixer({ grid: 'autoplace' }),
 		cssnano({ preset: ['default', { discardComments: { removeAll: true } }] })
 	]))
-	.pipe(rename({suffix: '.min', prefix : ''}))
+	.pipe(rename({ suffix: '.min', prefix : '' }))
 	.pipe(dest('app/css'))
 	.pipe(browserSync.stream())
 }
@@ -57,7 +57,6 @@ function imagemin() {
 	return src(['app/img/**/*'])
 		.pipe(imageminfn())
 		.pipe(dest('dist/img/'))
-		.pipe(browserSync.stream())
 }
 
 async function removedist() { del('dist/**/*', { force: true }) }
