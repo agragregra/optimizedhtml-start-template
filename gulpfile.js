@@ -13,7 +13,6 @@ const  uglify        = uglifyim.default
 import rename        from 'gulp-rename'
 import del           from 'del'
 import imageminfn    from 'gulp-imagemin'
-import changed       from 'gulp-changed'
 import cache         from 'gulp-cache'
 import autoprefixer  from 'autoprefixer'
 import ftp           from 'vinyl-ftp'
@@ -56,7 +55,6 @@ function sass() {
 
 function imagemin() {
 	return src(['app/img/**/*'])
-		.pipe(changed('dist/img/'))
 		.pipe(imageminfn())
 		.pipe(dest('dist/img/'))
 		.pipe(browserSync.stream())
