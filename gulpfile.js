@@ -68,6 +68,7 @@ async function clearcache() { cache.clearAll() }
 function buildcopy() {
 	return src([
 		'app/*.html',
+		'app/.htaccess',
 		'{app/js,app/css}/*.min.*',
 		'app/fonts/**/*'
 	], { base: 'app/' })
@@ -83,7 +84,7 @@ function deploy() {
 	});
 	let globs = [
 		'dist/**',
-		'dist/.htaccess',
+		// 'dist/.htaccess',
 	]
 	return src(globs, {buffer: false})
 	.pipe(conn.dest('/path/to/folder/on/server'))
@@ -108,10 +109,10 @@ function rsync() {
 function startwatch() {
 	watch('app/sass/**/*.sass', { usePolling: true }, sass)
 	watch(['libs/**/*.js', 'app/js/common.js'], { usePolling: true }, js)
-	watch('app/*.html', { usePolling: true }).on('change', browserSync.reload)
+	watch(['app/*.html'], { usePolling: true }).on('change', browserSync.reload)
 }
 
-export { js, sass, imagemin, deploy }
+export { js, sass, imagemin, deploy, clearcache }
 export let build = series(removedist, imagemin, js, sass, buildcopy)
 
 export default series(js, sass, parallel(browsersync, startwatch))
