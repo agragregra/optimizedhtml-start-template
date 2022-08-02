@@ -11,7 +11,7 @@ import concat        from 'gulp-concat'
 import uglifyim      from 'gulp-uglify-es'
 const  uglify        = uglifyim.default
 import rename        from 'gulp-rename'
-import del           from 'del'
+import {deleteAsync} from 'del'
 import imageminfn    from 'gulp-imagemin'
 import cache         from 'gulp-cache'
 import autoprefixer  from 'autoprefixer'
@@ -59,7 +59,7 @@ function imagemin() {
 		.pipe(dest('dist/img/'))
 }
 
-async function removedist() { del('dist/**/*', { force: true }) }
+async function removedist() { await deleteAsync('dist/**/*', { force: true }) }
 async function clearcache() { cache.clearAll() }
 
 function buildcopy() {
