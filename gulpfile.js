@@ -93,7 +93,7 @@ function rsync() {
 			root: 'dist/',
 			hostname: 'username@yousite.com',
 			destination: 'yousite/public_html/',
-			// clean: true, // Mirror copy with file deletion
+			clean: true, // Mirror copy with file deletion
 			include: [/* '*.htaccess' */], // Included files to deploy,
 			exclude: [ '**/Thumbs.db', '**/*.DS_Store' ],
 			recursive: true,
