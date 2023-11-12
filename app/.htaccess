@@ -4,8 +4,8 @@
 AddType application/vnd.ms-fontobject .eot
 AddType application/x-font-ttf .ttf
 AddType application/x-font-opentype .otf
-AddType application/x-font-woff .woff
-AddType application/x-font-woff2 .woff2
+AddType application/font-woff .woff
+AddType application/font-woff2 .woff2
 AddType image/svg+xml .svg
 
 # Compress compressible fonts
@@ -25,8 +25,8 @@ ExpiresByType image/svg+xml "access plus 2592000 seconds"
 ExpiresByType application/vnd.ms-fontobject "access plus 2592000 seconds"
 ExpiresByType application/x-font-ttf "access plus 2592000 seconds"
 ExpiresByType application/x-font-opentype "access plus 2592000 seconds"
-ExpiresByType application/x-font-woff "access plus 2592000 seconds"
-ExpiresByType application/x-font-woff2 "access plus 2592000 seconds"
+ExpiresByType application/font-woff "access plus 2592000 seconds"
+ExpiresByType application/font-woff2 "access plus 2592000 seconds"
 ExpiresByType image/svg+xml "access plus 2592000 seconds"
 
 # Cache other content types (Flash, CSS, JS, HTML, XML)
