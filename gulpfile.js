@@ -1,10 +1,10 @@
 import pkg from 'gulp'
-const { gulp, src, dest, parallel, series, watch } = pkg
+const { src, dest, parallel, series, watch } = pkg
 
 import browserSync   from 'browser-sync'
 import gulpSass      from 'gulp-sass'
 import * as dartSass from 'sass'
-const  sassfn        = gulpSass(dartSass)
+const  sassModule    = gulpSass(dartSass)
 import postCss       from 'gulp-postcss'
 import cssnano       from 'cssnano'
 import concat        from 'gulp-concat'
@@ -42,7 +42,7 @@ function js() {
 
 function sass() {
 	return src('app/sass/**/*.sass')
-	.pipe(sassfn())
+	.pipe(sassModule())
 	.pipe(postCss([
 		autoprefixer({ grid: 'autoplace' }),
 		cssnano({ preset: ['default', { discardComments: { removeAll: true } }] })
