@@ -53,7 +53,7 @@ function sass() {
 }
 
 function imagemin() {
-	return src(['app/img/**/*'])
+	return src(['app/img/**/*'], { encoding: false })
 		.pipe(imageminfn())
 		.pipe(dest('dist/img/'))
 }
@@ -67,7 +67,7 @@ function buildcopy() {
 		'app/.htaccess',
 		'{app/js,app/css}/*.min.*',
 		'app/fonts/**/*'
-	], { base: 'app/' })
+	], { base: 'app/', encoding: false })
 	.pipe(dest('dist'))
 }
 
@@ -82,7 +82,7 @@ function deploy() {
 		'dist/**',
 		// 'dist/.htaccess',
 	]
-	return src(globs, {buffer: false})
+	return src(globs, { buffer: false, encoding: false })
 	.pipe(conn.dest('/path/to/folder/on/server'))
 }
 
