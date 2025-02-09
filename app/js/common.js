@@ -1,5 +1,5 @@
 $(function() {
 
-	// Custom JS
+  // Custom JS
 
 });
