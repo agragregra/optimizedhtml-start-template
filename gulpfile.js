@@ -51,7 +51,10 @@ function sass() {
     'include css': true,
     silenceDeprecations: ['legacy-js-api', 'mixed-decls', 'color-functions', 'global-builtin', 'import'],
     loadPaths: ['./']
-  })).on('error', function handleError() { this.emit('end') })
+  })).on('error', function handleError(err) {
+    console.error('❌ Preprocessor error:', err.message);
+    this.emit('end');
+  })
   .pipe(postCss([
     autoprefixer({ grid: 'autoplace' }),
     cssnano({ preset: ['default', { discardComments: { removeAll: true } }] })
