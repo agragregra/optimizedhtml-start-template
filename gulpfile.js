@@ -1,21 +1,27 @@
 import pkg from 'gulp'
 const { src, dest, parallel, series, watch } = pkg
 
-import browserSync   from 'browser-sync'
-import gulpSass      from 'gulp-sass'
-import * as dartSass from 'sass'
-const  sassModule    = gulpSass(dartSass)
-import postCss       from 'gulp-postcss'
-import cssnano       from 'cssnano'
-import concat        from 'gulp-concat'
-import uglify        from 'gulp-uglify'
-import rename        from 'gulp-rename'
-import {deleteAsync} from 'del'
-import imageminfn    from 'gulp-imagemin'
-import cache         from 'gulp-cache'
-import autoprefixer  from 'autoprefixer'
-import ftp           from 'vinyl-ftp'
-import rsyncfn       from 'gulp-rsync'
+import browserSync      from 'browser-sync'
+import gulpSass         from 'gulp-sass'
+import * as dartSass    from 'sass'
+const  sassModule       = gulpSass(dartSass)
+import postCss          from 'gulp-postcss'
+import cssnano          from 'cssnano'
+import concat           from 'gulp-concat'
+import uglify           from 'gulp-uglify'
+import rename           from 'gulp-rename'
+import {deleteAsync}    from 'del'
+import imageminMain     from 'imagemin'
+import imageminJpegtran from 'imagemin-jpegtran'
+import imageminMozjpeg  from 'imagemin-mozjpeg'
+import imageminPngquant from 'imagemin-pngquant'
+import imageminSvgo     from 'imagemin-svgo'
+import path             from 'path'
+import fs               from 'fs-extra'
+import cache            from 'gulp-cache'
+import autoprefixer     from 'autoprefixer'
+import ftp              from 'vinyl-ftp'
+import rsyncfn          from 'gulp-rsync'
 
 function browsersync() {
   browserSync.init({
@@ -56,10 +62,26 @@ function sass() {
   .pipe(browserSync.stream())
 }
 
-function imagemin() {
-  return src(['app/img/**/*'], { encoding: false })
-    .pipe(imageminfn())
-    .pipe(dest('dist/img/'))
+async function imagemin() {
+  try {
+    const files = await imageminMain([`app/img/**/*`], {
+      plugins: [
+        imageminJpegtran({ progressive: true }),
+        imageminMozjpeg({ quality: 90 }),
+        imageminPngquant({ quality: [0.6, 0.8] }),
+        imageminSvgo()
+      ]
+    })
+    for (const v of files) {
+      const relativePath = path.relative('app/img', v.sourcePath)
+      const destPath = path.join('dist/img', relativePath)
+      fs.ensureDirSync(path.dirname(destPath))
+      fs.writeFileSync(destPath, v.data)
+    }
+    console.log('✅ Images optimized successfully.')
+  } catch (err) {
+    console.error('❌ Image Minification Error:', err.message || err)
+  }
 }
 
 async function removedist() { await deleteAsync('dist/**/*', { force: true }) }
