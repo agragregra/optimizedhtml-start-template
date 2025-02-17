@@ -12,7 +12,6 @@ import uglify           from 'gulp-uglify'
 import rename           from 'gulp-rename'
 import {deleteAsync}    from 'del'
 import imageminMain     from 'imagemin'
-import imageminJpegtran from 'imagemin-jpegtran'
 import imageminMozjpeg  from 'imagemin-mozjpeg'
 import imageminPngquant from 'imagemin-pngquant'
 import imageminSvgo     from 'imagemin-svgo'
@@ -66,7 +65,6 @@ async function imagemin() {
   try {
     const files = await imageminMain([`app/img/**/*`], {
       plugins: [
-        imageminJpegtran({ progressive: true }),
         imageminMozjpeg({ quality: 90 }),
         imageminPngquant({ quality: [0.6, 0.8] }),
         imageminSvgo()
